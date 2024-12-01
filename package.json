@@ -7,5 +7,8 @@
   },
   "author": "Adil Ahamad",
   "license": "ISC",
-  "description": "clustering in nodejs"
+  "description": "clustering in nodejs",
+  "dependencies": {
+    "express": "^4.21.1"
+  }
 }
