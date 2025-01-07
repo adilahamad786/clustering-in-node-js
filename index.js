@@ -20,17 +20,18 @@ else {
     const app = express();
     const port = process.env.PORT || 3000;
     
-    function doHash() {
-        var start = Date.now();
-        crypto.pbkdf2('a', 'a', 100000, 512, 'sha512', () => {
-            // console.log(Date.now() - start);
-            console.log(Date.now() - serverStart);
-        });
-    }
+    // function doHash() {
+    //     var start = Date.now();
+    //     crypto.pbkdf2('a', 'a', 100000, 512, 'sha512', () => {
+    //         // console.log(Date.now() - start);
+    //         console.log(Date.now() - serverStart);
+    //     });
+    // }
 
     function readFile() {
         fs.readFile('dummy.txt', () => {
-            console.log("Working : ", new Date(), process.pid)
+            // console.log("Working : ", new Date(), process.pid);
+            console.log(Date.now() - serverStart);
         })
     }
     
@@ -40,7 +41,7 @@ else {
         // readFile() // longer task
         // console.log("End : ", new Date(), process.pid)
 
-        doHash();
+        readFile();
 
         res.send("Hi there!");
     });
