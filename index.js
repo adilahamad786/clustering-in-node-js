@@ -1,4 +1,5 @@
 const cluster = require('cluster');
+const https = require('https');
 const fs = require('fs');
 const os = require('os');
 
@@ -6,7 +7,7 @@ const os = require('os');
 if (cluster.isMaster) {
     console.log("Length : ", os.cpus().length);
     cluster.fork(); // run again full code fore creating an insatance of worker/slave/child mode (instance).
-    cluster.fork(); // run again full code fore creating an insatance of worker/slave/child mode (instance).
+    // cluster.fork(); // run again full code fore creating an insatance of worker/slave/child mode (instance).
     // cluster.fork(); // run again full code fore creating an insatance of worker/slave/child mode (instance).
     // cluster.fork(); // run again full code fore creating an insatance of worker/slave/child mode (instance).
 }
@@ -20,18 +21,30 @@ else {
     const app = express();
     const port = process.env.PORT || 3000;
     
-    // function doHash() {
-    //     var start = Date.now();
-    //     crypto.pbkdf2('a', 'a', 100000, 512, 'sha512', () => {
-    //         // console.log(Date.now() - start);
-    //         console.log(Date.now() - serverStart);
-    //     });
-    // }
+    function doHash() {
+        var start = Date.now();
+        crypto.pbkdf2('a', 'a', 100000, 512, 'sha512', () => {
+            // console.log(Date.now() - start);
+            console.log(Date.now() - serverStart);
+        });
+    }
 
-    function readFile() {
+    function doRequest() {
+        https.request("https://www.dotcompal.com", res => {
+            res.on('data', () => {});
+            res.on('end', () => {
+                // console.log("Request : ", Date.now() - start);
+                console.log(Date.now() - serverStart);
+            })
+        }).end();
+    }
+
+    function readFile(callback) {
         fs.readFile('dummy.txt', () => {
             // console.log("Working : ", new Date(), process.pid);
-            console.log(Date.now() - serverStart);
+            // console.log(Date.now() - serverStart);
+            // res.send("Hi there!");
+            callback();
         })
     }
     
@@ -41,14 +54,19 @@ else {
         // readFile() // longer task
         // console.log("End : ", new Date(), process.pid)
 
-        readFile();
+        readFile(() => {
+            console.log(Date.now() - serverStart);
+            res.send("Hi there!");
+        });
+        // console.log("Hitting request api!");
+        // doRequest();
 
-        res.send("Hi there!");
+        // res.send("Hi there!");
     });
 
     app.get('/fast', (req, res) => {
         res.send("Fast response!");
-        console.log(process.pid)
+        console.log("Process ID : ", process.pid)
 
     });
     
