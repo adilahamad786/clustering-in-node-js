@@ -1,55 +1,48 @@
 const cluster = require('cluster');
+const fs = require('fs');
 const os = require('os');
-const gTime = Date.now();
 
 // Initially file execute in master mode and create an instance which is known as Cluster Master
 if (cluster.isMaster) {
     console.log("Length : ", os.cpus().length);
     cluster.fork(); // run again full code fore creating an insatance of worker/slave/child mode (instance).
     cluster.fork(); // run again full code fore creating an insatance of worker/slave/child mode (instance).
-    cluster.fork(); // run again full code fore creating an insatance of worker/slave/child mode (instance).
-    cluster.fork(); // run again full code fore creating an insatance of worker/slave/child mode (instance).
+    // cluster.fork(); // run again full code fore creating an insatance of worker/slave/child mode (instance).
+    // cluster.fork(); // run again full code fore creating an insatance of worker/slave/child mode (instance).
 }
 else {
+    process.env.UV_THREADPOOL_SIZE=4;
     // this code run for child/worker/slave mode only and work as server
     const express = require('express');
     const crypto = require('crypto');
-    // const start = Date.now();
-    var start = Date.now();
-    var firstTime = true;
+    const serverStart = Date.now();
     
     const app = express();
     const port = process.env.PORT || 3000;
     
     function doHash() {
-        crypto.pbkdf2('abcdefghijklmnopqrstuvwxyz', 'abcdefghijklmnopqrstuvwxyz', 21474836, 512, 'sha512', () => {
-            console.log("Hash : ", Date.now() - start);
+        var start = Date.now();
+        crypto.pbkdf2('a', 'a', 100000, 512, 'sha512', () => {
+            // console.log(Date.now() - start);
+            console.log(Date.now() - serverStart);
+        });
+    }
+
+    function readFile() {
+        fs.readFile('dummy.txt', () => {
+            console.log("Working : ", new Date(), process.pid)
         })
     }
     
     app.get('/', (req, res) => {
-        // doHash() // block main thread
+        
+        // console.log("Start : ", new Date(), process.pid)
+        // readFile() // longer task
+        // console.log("End : ", new Date(), process.pid)
 
-        console.log("Start : ", new Date(), process.pid)
-
-        // if (firstTime) {
-        //     start = Date.now();
-        //     firstTime = false;
-        // }
-
-        // const start = new Date().getTime();
-
-        for (let i = 0; i < 1000000000; i++) {
-            // do nothing
-        }
-
-        // console.log((Date.now() - start), process.pid);
-        // console.log("gTime : ", (gTime - start), process.pid);
-
-        console.log("End : ", new Date(), process.pid)
+        doHash();
 
         res.send("Hi there!");
-        // console.log("Pid", process.pid)
     });
 
     app.get('/fast', (req, res) => {
