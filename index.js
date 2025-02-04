@@ -4,15 +4,15 @@ const fs = require('fs');
 const os = require('os');
 
 // Initially file execute in master mode and create an instance which is known as Cluster Master
-if (cluster.isMaster) {
-    console.log("Length : ", os.cpus().length);
-    cluster.fork(); // run again full code fore creating an insatance of worker/slave/child mode (instance).
-    cluster.fork(); // run again full code fore creating an insatance of worker/slave/child mode (instance).
-    // cluster.fork(); // run again full code fore creating an insatance of worker/slave/child mode (instance).
-    // cluster.fork(); // run again full code fore creating an insatance of worker/slave/child mode (instance).
-}
-else {
-    process.env.UV_THREADPOOL_SIZE=4;
+// if (cluster.isMaster) {
+//     console.log("Length : ", os.cpus().length);
+//     cluster.fork(); // run again full code fore creating an insatance of worker/slave/child mode (instance).
+//     cluster.fork(); // run again full code fore creating an insatance of worker/slave/child mode (instance).
+//     // cluster.fork(); // run again full code fore creating an insatance of worker/slave/child mode (instance).
+//     // cluster.fork(); // run again full code fore creating an insatance of worker/slave/child mode (instance).
+// }
+// else {
+//     process.env.UV_THREADPOOL_SIZE=4;
     // this code run for child/worker/slave mode only and work as server
     const express = require('express');
     const crypto = require('crypto');
@@ -78,7 +78,7 @@ else {
     app.listen(port, () => {
         console.log("Server is running on port : ", port);
     });
-}
+// }
 
 
 
